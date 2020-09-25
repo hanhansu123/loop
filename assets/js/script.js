@@ -276,6 +276,16 @@ function RemoveArr(arr) {
     return arr1
 }
 
+function RemoveArr2(arr) {
+    var arr1 = []
+    for (var i = arr.length -1 ; i >=0 ; i--) {
+        if (arr1.map(x => x).indexOf(arr[i]) == -1) {
+            arr1.push(arr[i])
+        }
+    }
+    return arr1
+}
+
 
 function getUserR(user,mid,weight) {     
     //用户某个交易对的情况
@@ -286,7 +296,7 @@ function getUserR(user,mid,weight) {
                     if(data["rows"][0]["miner"] != null){
 						
                         usermid.push(mid);//领取时提取
-						usermid = RemoveArr(usermid);//去重
+						usermid = RemoveArr2(usermid);//去重
 						
 						//console.log(usermid);
 
