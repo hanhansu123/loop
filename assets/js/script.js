@@ -159,6 +159,10 @@ var reward_data = [];
 var pickingbal = new CountUp("pickingbal", 0, 0.00000000, 8, 15, options);
 var ran = 0 ;
 
+	Notiflix.Notify.Init({
+  position: 'center-center', 
+});
+
 
 function getMinePool() {     
     //挖矿池余额
