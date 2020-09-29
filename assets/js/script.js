@@ -152,14 +152,14 @@ var divipool_bal = 0;
 var balance03 = new CountUp("balance03", 0, 0.00000000, 8, 15, options);
 var dfseos = 0;
 //var poolmid = [];//挖矿的交易对mid和权重
-var poolmid = [{mid: 39, weight: "2.00000000000000000"},{mid: 329, weight: "1.00000000000000000"},{mid: 424, weight: "7.00000000000000000"}];
+var poolmid = [{mid: 39, weight: "2.00000000000000000"},{mid: 329, weight: "1.00000000000000000"},{mid: 424, weight: "7.00000000000000000"},{mid: 5, weight: "2.00000000000000000"}];
 var usermid = [39];//用户挖矿的mid
 var reward_all = 0;
 var reward_data = [];
 var pickingbal = new CountUp("pickingbal", 0, 0.00000000, 8, 15, options);
 var ran = 0 ;
 
-	Notiflix.Notify.Init({
+Notiflix.Notify.Init({
   position: 'center-center', 
 });
 
