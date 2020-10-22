@@ -95,6 +95,7 @@ function claim(mid,ifbonus) {
 		if(mid == 39){document.getElementById('r_dfs').innerText = 0.00000000;reward_dfs = 0.00000000;}
 		if(mid == 329){document.getElementById('r_yfc').innerText = 0.00000000;reward_yfc = 0.00000000;}
 		if(mid == 5){document.getElementById('r_key').innerText = 0.00000000;reward_key = 0.00000000;}
+		if(mid == 10){document.getElementById('r_ccc').innerText = 0.00000000;reward_key = 0.00000000;}
 		Notiflix.Notify.Success('领取成功！Successful claim！');
 		
         return;

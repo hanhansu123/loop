@@ -152,8 +152,8 @@ var divipool_bal = 0;
 var balance03 = new CountUp("balance03", 0, 0.00000000, 8, 15, options);
 var dfseos = 0;
 //var poolmid = [];//挖矿的交易对mid和权重
-var poolmid = [{mid: 39, weight: "2.00000000000000000"},{mid: 329, weight: "1.00000000000000000"},{mid: 424, weight: "10.00000000000000000"},{mid: 5, weight: "2.00000000000000000"}];
-var usermid = [39];//用户挖矿的mid
+var poolmid = [{mid: 39, weight: "2.00000000000000000"},{mid: 329, weight: "1.00000000000000000"},{mid: 424, weight: "10.00000000000000000"},{mid: 10, weight: "10.00000000000000000"},{mid: 5, weight: "2.00000000000000000"}];
+var usermid = [424];//用户挖矿的mid
 var reward_all = 0;
 var reward_data = [];
 var pickingbal = new CountUp("pickingbal", 0, 0.00000000, 8, 15, options);
@@ -367,7 +367,7 @@ function getUserBurn(user) {
                         //poolmid.push(data["rows"][x]["id"])
 
                         var cum_burn = parseFloat(data["rows"][0]["cumulative_burn"]);
-                        var buffer = 1 - Math.pow(0.6, cum_burn*10);
+                        var buffer = 1 - Math.pow(0.6, cum_burn);
 
                         ran = Math.floor(buffer * 10000) / 100;
 						//console.log('ran:'+ran);
