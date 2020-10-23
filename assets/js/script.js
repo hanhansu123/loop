@@ -71,7 +71,7 @@
                   items:1,
               },
               600:{
-                  items:3,
+                  items:2,
               },
               1000:{
                   items:2,
@@ -133,6 +133,7 @@ var options = {
         login();
     
         getMinePool();
+		getGamePool();
         getSupply();
         getDiviPool();
 		getDfsEOS();
@@ -150,6 +151,8 @@ var supply = 0;
 var balance02 = new CountUp("balance02", 0, 0.00000000, 8, 15, options);
 var divipool_bal = 0;
 var balance03 = new CountUp("balance03", 0, 0.00000000, 8, 15, options);
+var gamepool_bal = 0;
+var balance04 = new CountUp("balance04", 0, 0.00000000, 8, 15, options);
 var dfseos = 0;
 //var poolmid = [];//挖矿的交易对mid和权重
 var poolmid = [{mid: 39, weight: "2.00000000000000000"},{mid: 329, weight: "1.00000000000000000"},{mid: 424, weight: "10.00000000000000000"},{mid: 10, weight: "10.00000000000000000"},{mid: 5, weight: "2.00000000000000000"}];
@@ -158,6 +161,15 @@ var reward_all = 0;
 var reward_data = [];
 var pickingbal = new CountUp("pickingbal", 0, 0.00000000, 8, 15, options);
 var ran = 0 ;
+
+var gid = [];//尾单博弈的game id，取最后3个
+var last_gametime = 0;
+var game_reward08 = 0;//倒数第八名的奖励
+var game_reward07 = 0;
+var game_reward06 = 0;
+var game_reward05 = 0;
+var html = '';
+var html2 = '';
 
 Notiflix.Notify.Init({
   position: 'center-center', 
@@ -174,6 +186,19 @@ function getMinePool() {
         //var balance01 = new CountUp("balance01", 0, minepool_bal, 8, 2, options);
         //balance01.start();
         //balance01.update(minepool_bal);
+    }, "json");
+}
+
+function getGamePool() {     
+    //博弈奖池余额
+    var api = get_random_api() ;
+    $.post(api + "/v1/chain/get_currency_balance",'{"code":"looptoken123","symbol":"LOOP","account":"loopgamepool"}',
+    function(data,status){
+        gamepool_bal = parseFloat(data[0]);
+
+        //var balance04 = new CountUp("balance01", 0, minepool_bal, 8, 2, options);
+        //balance04.start();
+        //balance04.update(minepool_bal);
     }, "json");
 }
 
@@ -215,8 +240,12 @@ function getDfsEOS() {
 function updateAll() {  
     
         getMinePool();
+		getGamePool();
         getSupply();
         getDiviPool();
+		getGid();
+		updataGameTable()
+		
 
         if(poolmid.length ==  0){
            //poolmid为空数组时
@@ -227,6 +256,10 @@ function updateAll() {
         }
         if(ran ==  0 && account.name != null){
             getUserBurn(account.name) 
+        } 
+		if(gid.length !=  0){
+            getGameTable01();
+			getGameTable02();
         } 
      
 }
@@ -257,6 +290,84 @@ function getPoolMid() {
             }
             console.log(poolmid)
             //[{mid: 2, weight: "1.00000000000000000"},{mid: 2, weight: "1.00000000000000000"}]
+
+    }, "json");
+}
+
+function getGid() {     
+    //矿池交易对id和权重
+    var api = get_random_api() ;
+    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopminepool","scope":"loopminepool","table":"lands","json":true,"reverse": true,"limit":3}',
+    function(data,status){
+		gid = [];
+        for (x in data["rows"]){
+                    if(data["rows"][x]["mid"] != null){
+                        gid.push(data["rows"][x]["mid"])
+
+                    }
+            }
+			getGameTable01();
+			getGameTable02();
+
+    }, "json");
+}
+
+function getGameTable01() {     
+    var api = get_random_api() ;
+    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopminepool","scope":"'+gid[0]+'","table":"miners","json":true,"reverse": true,"limit":10}',
+    function(data,status){
+		html = '';
+		html += '<div class="review-item" style="padding:5px;"><div class="wrap-table100"><center><h2>第'+gid[0]+'轮<small>（进行中）</small></h2></center>';
+		html += '<div class="table100"><table><thead><tr class="table100-head"><th class="column2">账户名</th><th class="column3">时间</th><th class="column4">预估奖励</th></tr></thead><tbody>';
+        for (x in data["rows"]){
+                    if(data["rows"][x]["miner"] != null){
+						html += '<tr><td class="column2">'+data["rows"][x]["miner"]+'</td><td class="column3">'+data["rows"][x]["last_drip"]+'</td><td class="column4">'+data["rows"][x]["liq_bal0"]+' LOOP</td></tr>';
+						
+                    }
+            }
+            html += '</tbody></table></div></div></div>';
+			
+
+    }, "json");
+}
+
+function getGameTable02() {     
+    var api = get_random_api() ;
+    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopminepool","scope":"'+gid[1]+'","table":"miners","json":true,"reverse": true,"limit":10}',
+    function(data,status){
+		html2 = '';
+		html2 += '<div class="review-item" style="padding:5px;"><div class="wrap-table100"><center><h2>第'+gid[1]+'轮<small>（已结束）</small></h2></center>';
+		html2 += '<div class="table100"><table><thead><tr class="table100-head"><th class="column2">账户名</th><th class="column3">时间</th><th class="column4">奖励</th></tr></thead><tbody>';
+        for (x in data["rows"]){
+                    if(data["rows"][x]["miner"] != null){
+						html2 += '<tr><td class="column2">'+data["rows"][x]["miner"]+'</td><td class="column3">'+data["rows"][x]["last_drip"]+'</td><td class="column4">'+data["rows"][x]["liq_bal0"]+'</td></tr>';
+						
+                    }
+            }
+            html2 += '</tbody></table></div></div></div>';
+    }, "json");
+}
+
+function updataGameTable() {
+    	
+    if(html != null && html2 != null){var html3 = html + html2;$("#gamelist").html(html3);}
+}
+
+function getGameTable03() {     
+    var api = get_random_api() ;
+    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopminepool","scope":"'+gid[2]+'","table":"miners","json":true,"reverse": true,"limit":10}',
+    function(data,status){
+		var html3 = '';
+		html3 += '<center><h2>第'+gid[2]+'轮<small>（已结束）</small></h2></center>';
+		html3 += '<div class="table100"><table><thead><tr class="table100-head"><th class="column2">账户名</th><th class="column3">时间</th><th class="column4">奖励</th></tr></thead><tbody>';
+        for (x in data["rows"]){
+                    if(data["rows"][x]["miner"] != null){
+						html3 += '<tr><td class="column2">'+data["rows"][x]["miner"]+'</td><td class="column3">'+data["rows"][x]["last_drip"]+'</td><td class="column4">'+data["rows"][x]["liq_bal0"]+'</td></tr>';
+						
+                    }
+            }
+            html3 += '</tbody></table></div>';
+			$("#gamelist03").html(html3)
 
     }, "json");
 }

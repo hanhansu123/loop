@@ -83,16 +83,16 @@ var trans = [{
     cn : 'LOOP分红池',
   }
   ,{ 
-    en : 'For holding dividends, tail order game, etc',
-    cn : '用于持币分红、尾单博弈等',
+    en : 'For holding dividends',
+    cn : '用于持币分红',
   }
   ,{ 
-    en : 'Loop circulation',
-    cn : 'LOOP流通量',
+    en : 'Loop Game pool',
+    cn : 'LOOP博弈奖池',
   }
   ,{ 
-    en : 'Release - Mine pool - Dividends pool',
-    cn : '释放量 - 仓库余额 - 分红池',
+    en : 'For tail order game',
+    cn : '开奖时需大于 10 LOOP',
   }
   ,{ 
     en : 'Choose Farmlands',
