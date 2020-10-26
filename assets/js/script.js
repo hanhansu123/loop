@@ -168,8 +168,8 @@ var game_reward08 = 0;//倒数第八名的奖励
 var game_reward07 = 0;
 var game_reward06 = 0;
 var game_reward05 = 0;
-var html = '';
-var html2 = '';
+var i_true ='<i class="ti-check">';
+var i_false ='<i class="ti-close">';
 
 Notiflix.Notify.Init({
   position: 'center-center', 
@@ -195,10 +195,16 @@ function getGamePool() {
     $.post(api + "/v1/chain/get_currency_balance",'{"code":"looptoken123","symbol":"LOOP","account":"loopgamepool"}',
     function(data,status){
         gamepool_bal = parseFloat(data[0]);
+		game_reward08 = (gamepool_bal * 20/100 ).toFixed(8);
+		game_reward07 = (gamepool_bal * 8/100 ).toFixed(8);
+		game_reward06 = (gamepool_bal * 6/100 ).toFixed(8);
+		game_reward05 = (gamepool_bal * 3/100 ).toFixed(8);
 
-        //var balance04 = new CountUp("balance01", 0, minepool_bal, 8, 2, options);
-        //balance04.start();
-        //balance04.update(minepool_bal);
+        if(gamepool_bal>= 10){ 
+		    $("#i-gamepool").addClass("ti-check");$("#i-gamepool").removeClass("ti-close"); }else { $("#i-gamepool").addClass("ti-close");$("#i-gamepool").removeClass("ti-check");
+			
+			};
+		
     }, "json");
 }
 
@@ -297,35 +303,53 @@ function getPoolMid() {
 function getGid() {     
     //矿池交易对id和权重
     var api = get_random_api() ;
-    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopminepool","scope":"loopminepool","table":"lands","json":true,"reverse": true,"limit":3}',
+    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopgamepool","scope":"loopgamepool","table":"status","json":true,"reverse": true,"limit":3}',
     function(data,status){
 		gid = [];
         for (x in data["rows"]){
-                    if(data["rows"][x]["mid"] != null){
-                        gid.push(data["rows"][x]["mid"])
+                    if(data["rows"][x]["gid"] != null){
+                        gid.push(data["rows"][x]["gid"])
 
                     }
             }
 			getGameTable01();
-			getGameTable02();
+			//getGameTable02();
+			//getGameTable03();
 
     }, "json");
 }
 
 function getGameTable01() {     
     var api = get_random_api() ;
-    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopminepool","scope":"'+gid[0]+'","table":"miners","json":true,"reverse": true,"limit":10}',
+    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopgamepool","scope":"'+gid[0]+'","table":"games","json":true,"reverse": false,"limit":10}',
     function(data,status){
-		html = '';
-		html += '<div class="review-item" style="padding:5px;"><div class="wrap-table100"><center><h2>第'+gid[0]+'轮<small>（进行中）</small></h2></center>';
-		html += '<div class="table100"><table><thead><tr class="table100-head"><th class="column2">账户名</th><th class="column3">时间</th><th class="column4">预估奖励</th></tr></thead><tbody>';
+		if(data["rows"][7] != null){ 
+		    $("#i-player").addClass("ti-check");$("#i-player").removeClass("ti-close"); 
+			if(gamepool_bal>= 10){//如果博弈奖池余额大于10且人数大于8，就刷新倒计时
+				t1 = new Date(data["rows"][7]["last_play"]*1000 + 60*60*1000).Format('MM/dd/yy hh:mm:ss');
+				$('#cd1').downCount({date: t1,offset: +8}, function () {});
+				}
+		}else { 
+		    $("#i-player").addClass("ti-close");$("#i-player").removeClass("ti-check");
+		};
+		//console.log(data["rows"]);
+		
+		
+		var html = '';
+		html += '第'+gid[0]+'轮<small>（进行中）</small>';
+		$("#boxtab01").html(html);
+		var html2 = '';
+		html2 += '<div class="table100"><table><thead><tr class="table100-head"><th class="column2">账户名</th><th class="column3">时间</th><th class="column4">预估奖励</th></tr></thead><tbody>';
         for (x in data["rows"]){
-                    if(data["rows"][x]["miner"] != null){
-						html += '<tr><td class="column2">'+data["rows"][x]["miner"]+'</td><td class="column3">'+data["rows"][x]["last_drip"]+'</td><td class="column4">'+data["rows"][x]["liq_bal0"]+' LOOP</td></tr>';
+            if(data["rows"][x]["user"] != null){
+				var r ;
+			    if(x == 0){ r = game_reward08;}else if(x == 1){ r = game_reward07;}else if(x == 2){ r = game_reward06;}else{ r = game_reward05;}
+				html2 += '<tr><td class="column2">'+data["rows"][x]["user"]+'</td><td class="column3">'+new Date(data["rows"][x]["last_play"]*1000).Format('yy/MM/dd hh:mm:ss')+'</td><td class="column4">'+r+' LOOP</td></tr>';
 						
-                    }
+                }
             }
-            html += '</tbody></table></div></div></div>';
+            html2 += '</tbody></table></div>';
+			$("#box01").html(html2);
 			
 
     }, "json");
@@ -333,41 +357,44 @@ function getGameTable01() {
 
 function getGameTable02() {     
     var api = get_random_api() ;
-    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopminepool","scope":"'+gid[1]+'","table":"miners","json":true,"reverse": true,"limit":10}',
+    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopgamepool","scope":"'+gid[1]+'","table":"games","json":true,"reverse": false,"limit":10}',
     function(data,status){
-		html2 = '';
-		html2 += '<div class="review-item" style="padding:5px;"><div class="wrap-table100"><center><h2>第'+gid[1]+'轮<small>（已结束）</small></h2></center>';
+		var html = '';
+		html += '第'+gid[1]+'轮<small>（结束）</small>';
+		$("#boxtab02").html(html);
+		var html2 = '';
 		html2 += '<div class="table100"><table><thead><tr class="table100-head"><th class="column2">账户名</th><th class="column3">时间</th><th class="column4">奖励</th></tr></thead><tbody>';
         for (x in data["rows"]){
-                    if(data["rows"][x]["miner"] != null){
-						html2 += '<tr><td class="column2">'+data["rows"][x]["miner"]+'</td><td class="column3">'+data["rows"][x]["last_drip"]+'</td><td class="column4">'+data["rows"][x]["liq_bal0"]+'</td></tr>';
+                    if(data["rows"][x]["user"] != null){
+						html2 += '<tr><td class="column2">'+data["rows"][x]["user"]+'</td><td class="column3">'+ new Date(data["rows"][x]["last_play"]*1000).Format('yy/MM/dd hh:mm:ss')+'</td><td class="column4">'+data["rows"][x]["reward"]+'</td></tr>';
 						
                     }
             }
-            html2 += '</tbody></table></div></div></div>';
-    }, "json");
-}
+            html2 += '</tbody></table></div>';
+			$("#box02").html(html2);
+			
 
-function updataGameTable() {
-    	
-    if(html != null && html2 != null){var html3 = html + html2;$("#gamelist").html(html3);}
+    }, "json");
 }
 
 function getGameTable03() {     
     var api = get_random_api() ;
-    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopminepool","scope":"'+gid[2]+'","table":"miners","json":true,"reverse": true,"limit":10}',
+    $.post(api + "/v1/chain/get_table_rows",'{"code":"loopgamepool","scope":"'+gid[2]+'","table":"games","json":true,"reverse": false,"limit":10}',
     function(data,status){
-		var html3 = '';
-		html3 += '<center><h2>第'+gid[2]+'轮<small>（已结束）</small></h2></center>';
-		html3 += '<div class="table100"><table><thead><tr class="table100-head"><th class="column2">账户名</th><th class="column3">时间</th><th class="column4">奖励</th></tr></thead><tbody>';
+		var html = '';
+		html += '第'+gid[2]+'轮<small>（结束）</small>';
+		$("#boxtab03").html(html);
+		var html2 = '';
+		html2 += '<div class="table100"><table><thead><tr class="table100-head"><th class="column2">账户名</th><th class="column3">时间</th><th class="column4">奖励</th></tr></thead><tbody>';
         for (x in data["rows"]){
-                    if(data["rows"][x]["miner"] != null){
-						html3 += '<tr><td class="column2">'+data["rows"][x]["miner"]+'</td><td class="column3">'+data["rows"][x]["last_drip"]+'</td><td class="column4">'+data["rows"][x]["liq_bal0"]+'</td></tr>';
+                    if(data["rows"][x]["user"] != null){
+						html2 += '<tr><td class="column2">'+data["rows"][x]["user"]+'</td><td class="column3">'+ new Date(data["rows"][x]["last_play"]*1000).Format('yy/MM/dd hh:mm:ss')+'</td><td class="column4">'+data["rows"][x]["reward"]+'</td></tr>';
 						
                     }
             }
-            html3 += '</tbody></table></div>';
-			$("#gamelist03").html(html3)
+            html2 += '</tbody></table></div>';
+			$("#box03").html(html2);
+			
 
     }, "json");
 }
