@@ -250,7 +250,6 @@ function updateAll() {
         getSupply();
         getDiviPool();
 		getGid();
-		updataGameTable()
 		
 
         if(poolmid.length ==  0){
@@ -264,8 +263,8 @@ function updateAll() {
             getUserBurn(account.name) 
         } 
 		if(gid.length !=  0){
-            getGameTable01();
-			getGameTable02();
+            //getGameTable01();
+			//getGameTable02();
         } 
      
 }
@@ -276,7 +275,7 @@ function calReward(pool_balance,user_balance,dfseos,elasped,pool_mining_weight) 
     //计算挖矿数量
     //mining_amount = 挖矿池HULU余额的十万分之一 * 做市资金占比 * 做市时间 * 菜地权重 * 暴击因子; 
     var mining_reward = (pool_balance/100000) *  (user_balance/dfseos) * elasped * pool_mining_weight;
-    //buffer = 2 - Math.pow(0.6, cum_burn*10);
+    //buffer = 2 - Math.pow(0.6, cum_burn);
     return mining_reward;
     
 }
