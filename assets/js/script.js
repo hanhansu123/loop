@@ -155,7 +155,7 @@ var gamepool_bal = 0;
 var balance04 = new CountUp("balance04", 0, 0.00000000, 8, 15, options);
 var dfseos = 0;
 //var poolmid = [];//挖矿的交易对mid和权重
-var poolmid = [{mid: 424, weight: "5.00000000000000000"},{mid: 10, weight: "5.00000000000000000"}];
+var poolmid = [{mid: 424, weight: "2.00000000000000000"},{mid: 10, weight: "2.00000000000000000"}];
 var usermid = [424];//用户挖矿的mid
 var reward_all = 0;
 var reward_data = [];
@@ -326,7 +326,7 @@ function getGameTable01() {
 		    $("#i-player").addClass("ti-check");$("#i-player").removeClass("ti-close"); 
 			if(gamepool_bal>= 10){//如果博弈奖池余额大于10且人数大于8，就刷新倒计时
 				t1 = new Date(data["rows"][7]["last_play"]*1000 + 60*60*1000).Format('MM/dd/yy hh:mm:ss');
-				$('#cd1').downCount({date: t1,offset: +8}, function () {});
+				$('#cd1').downCount({date: t1,offset: +8}, function () {setTimeout(function (){window.location.reload();}, 3000);});
 				}
 		}else { 
 		    $("#i-player").addClass("ti-close");$("#i-player").removeClass("ti-check");
