@@ -83,8 +83,8 @@ var trans = [{
     cn : 'LOOP分红池',
   }
   ,{ 
-    en : 'For holding dividends',
-    cn : '用于持币分红',
+    en : 'For mining',
+    cn : '用于流动性挖矿',
   }
   ,{ 
     en : 'Loop Game pool',
