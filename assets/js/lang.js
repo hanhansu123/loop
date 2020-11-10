@@ -72,7 +72,7 @@ var trans = [{
   }
   ,{ 
     en : 'LOOP Release',
-    cn : 'LOOP释放量',
+    cn : 'LOOP释放量(通缩中)',
   }
   ,{ 
     en : 'The max supply：20000LOOP',
