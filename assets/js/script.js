@@ -313,7 +313,7 @@ function getGid() {
             }
 			getGameTable01();
 			getGameTable02();
-			getGameTable03();
+			//getGameTable03();
 
     }, "json");
 }
